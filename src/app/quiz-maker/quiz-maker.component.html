@@ -1,0 +1,33 @@
+<form [formGroup]="form" autocomplete="off" (submit)="createQuiz()">
+  <div class="row">
+    <div class="col-sm-3">
+      <input id="category" placeholder="Select category" [appAutocomplete]="autocomplete" formControlName="category" (change)="onCategoryChange()">
+      <app-autocomplete #autocomplete="appAutocomplete">
+        <app-autocomplete-option [value]="category.id" *ngFor="let category of categories$ | async">
+          {{category.name}}
+        </app-autocomplete-option>
+      </app-autocomplete>
+    </div>
+    <div *ngIf="showSubCategory" class="col-sm-3">
+      <input id="subCategory" placeholder="Select sub category" [appAutocomplete]="autocompleteSubCat" formControlName="subCategory">
+      <app-autocomplete #autocompleteSubCat="appAutocomplete">
+        <app-autocomplete-option [value]="category.id" *ngFor="let category of subCategories$ | async">
+          {{category.name}}
+        </app-autocomplete-option>
+      </app-autocomplete>
+    </div>
+    <div class="col-sm-3">
+      <select id="difficultySelect" formControlName="difficulty">
+        <option value="">Select difficulty</option>
+        <option>Easy</option>
+        <option>Medium</option>
+        <option>Hard</option>
+      </select>
+    </div>
+    <button type="submit" class="primary" id="createBtn" [disabled]="form.invalid">Create</button>
+  </div>
+</form>
+
+<div class="row">
+   <app-quiz [questions]="questions$ | async" ></app-quiz>
+</div>

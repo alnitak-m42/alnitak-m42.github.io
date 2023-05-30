@@ -1,0 +1,8 @@
+<h1>QUIZ MAKER</h1>
+<div class="container">
+  <router-outlet></router-outlet>
+</div>
+
+<div *ngIf="isLoading" class="app-modal">
+  <div class="app-modal-content spinner primary"></div>
+</div>

@@ -1,0 +1,15 @@
+.app-autocomplete-dropdown {
+    display: block;
+    position: fixed;
+    z-index: 1;
+    overflow-y: auto;
+    background-color: white;
+    box-shadow: 0 2px 14px 0 rgba(0, 0, 0, 0.2);
+    width: fit-content;
+    height: fit-content;
+    max-height: 400px;
+    margin: calc(var(--universal-margin) / 2);
+    padding: var(--universal-padding) calc(1.5 * var(--universal-padding));
+    margin-top: 0;
+    padding-top: 0;
+}

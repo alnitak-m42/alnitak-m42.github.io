@@ -1,0 +1,16 @@
+<div *ngIf="message" class="row">
+  <div class="card error">{{message}}</div>
+</div>
+
+<app-question *ngFor="let q of questions; index as i; trackBy: questionTrackBy" 
+  [question]="q"
+  [canChangeQuestion]="canChangeQuestions"
+  (change)="onAnswerClicked(i, $event)"
+  (changeQuestion)="onChangeQuestionClicked(i)">
+</app-question>
+
+<div>
+  <button class="inverse large" *ngIf="canShowSubmit()" (click)="submit()">
+    Submit
+  </button>
+</div>

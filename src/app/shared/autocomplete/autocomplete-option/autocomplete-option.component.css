@@ -1,0 +1,11 @@
+.app-autocomplete-option {
+    display: block;
+    padding: 5px;
+    width: auto;
+    min-width: 150px;
+    cursor: pointer;
+}
+  
+.app-autocomplete-option:hover {
+    background-color: #EEEEEE;
+}
