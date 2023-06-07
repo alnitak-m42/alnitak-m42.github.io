@@ -25,14 +25,18 @@ export class AutocompleteComponent implements AfterContentInit {
   }
 
   getOptionsChanges(): Observable<any> | undefined {
-    let optionChanges: Observable<any>[] = [];
-    this.optionsList?.forEach(option=> {
-      optionChanges.push(option.selected$);
-    });
-    return merge(optionChanges).pipe(
-      mergeAll(),
-      distinctUntilChanged()
-    );
+    let ret: Observable<any> | undefined;
+    if (this.optionsList && this.optionsList?.length>0) {
+      let optionChanges: Observable<any>[] = [];
+      this.optionsList?.forEach(option=> {
+        optionChanges.push(option.selected$);
+      });
+      return merge(optionChanges).pipe(
+        mergeAll(),
+        distinctUntilChanged()
+      );
+    }
+    return ret;
   }
 
   show() {
@@ -54,17 +58,19 @@ export class AutocompleteComponent implements AfterContentInit {
 
   filter(text: string) {
     if (text) {
-      const search = text.toLowerCase().trim();
-      let ctrVisible = 0;
-      this.optionsList?.forEach(option=> {
-        let isVisible = option.getText().toLowerCase().includes(search);
-        option.setVisible(isVisible);
-        if (isVisible) {
-          ctrVisible++;
-          option.highlightMatches(search);
-        }
-      });
-      this.renderer.setStyle(this.dropdownEl.nativeElement, 'display', ctrVisible>0?'block':'none');
+      if (this.dropdownEl) {
+        const search = text.toLowerCase().trim();
+        let ctrVisible = 0;
+        this.optionsList?.forEach(option=> {
+          let isVisible = option.getText().toLowerCase().includes(search);
+          option.setVisible(isVisible);
+          if (isVisible) {
+            ctrVisible++;
+            option.highlightMatches(search);
+          }
+        });
+        this.renderer.setStyle(this.dropdownEl.nativeElement, 'display', ctrVisible>0?'block':'none');
+      }
     } else {
       this.optionsList?.forEach(option=> {
         option.clearMatches();

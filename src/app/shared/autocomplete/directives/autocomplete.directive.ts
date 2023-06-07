@@ -40,15 +40,18 @@ export class AutocompleteDirective implements AfterViewInit, OnDestroy, ControlV
 
   @HostListener('focus') 
   private onFocus() {
-    this.showDropdown();
+    let optionsEvents$ = this.appAutocomplete.getOptionsChanges();
+    if (optionsEvents$) {
+      this.showDropdown();
 
-    this.appAutocomplete.getOptionsChanges()?.pipe(
-      takeUntil(this.onDropDownClosed$)
-    ).subscribe(value=> {
-      this.setHostValueByOptionValue(value);
-      this.notifyValue(value);
-      this.hideDropdown();
-    });
+      optionsEvents$.pipe(
+        takeUntil(this.onDropDownClosed$)
+      ).subscribe(value=> {
+        this.setHostValueByOptionValue(value);
+        this.notifyValue(value);
+        this.hideDropdown();
+      });
+    }
   }
 
   @HostListener('blur') 
@@ -58,9 +61,10 @@ export class AutocompleteDirective implements AfterViewInit, OnDestroy, ControlV
 
   private attachKeyUpEvents() {
     fromEvent(this.el.nativeElement, 'keyup').pipe(
-      map((event: any) => event.target.value),
+      takeUntil(this.onDestroy$),
       debounceTime(200),  
       distinctUntilChanged(),
+      map((event: any) => event.target.value),
     ).subscribe(text=> {
       this.notifyValue(null);
       this.appAutocomplete.filter(text);

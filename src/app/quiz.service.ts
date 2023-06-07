@@ -34,14 +34,14 @@ export class QuizService {
         map((categories: Category[])=> {
           let categoyFilter: Map<number|string, Category> = new Map();
           categories.forEach(category=> {
-            let categoryGroup: Category[] = [];
+            let categoryGroup: Category | undefined;
             this.catergoryGroupKeys.forEach(key=> {
               if (category.name.trim().startsWith(key)) {
-                categoryGroup.push({id: key, name: key.replace(':', '')});
+                categoryGroup = {id: key, name: key.replace(':', '')};
               }
             });
-            if (categoryGroup.length>0) {
-              categoyFilter.set(categoryGroup[0].id, categoryGroup[0]);
+            if (categoryGroup) {
+              categoyFilter.set(categoryGroup.id, categoryGroup);
             } else {
               categoyFilter.set(category.id, category);
             }

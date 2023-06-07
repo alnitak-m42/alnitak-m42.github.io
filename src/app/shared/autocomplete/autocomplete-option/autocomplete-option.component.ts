@@ -1,14 +1,16 @@
-import { Component, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
-import { Observable, fromEvent, map} from 'rxjs';
+import { Component, ElementRef, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Observable, Subject, fromEvent, map, takeUntil} from 'rxjs';
 
 @Component({
   selector: 'app-autocomplete-option',
   templateUrl: './autocomplete-option.component.html',
   styleUrls: ['./autocomplete-option.component.css']
 })
-export class AutocompleteOptionComponent implements OnInit{
+export class AutocompleteOptionComponent implements OnInit, OnDestroy{
   @Input({required: true}) value: any;
-  
+
+  private onDestroy$: Subject<void> = new Subject();
+
   selected$!: Observable<any>;
 
   constructor(
@@ -18,8 +20,14 @@ export class AutocompleteOptionComponent implements OnInit{
 
   ngOnInit(): void {
     this.selected$ = fromEvent(this.el.nativeElement, 'click').pipe(
+      takeUntil(this.onDestroy$),
       map(event=> this.value)
     );
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
   }
 
   getText(): string {
